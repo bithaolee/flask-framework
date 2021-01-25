@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, g
 from werkzeug.local import LocalProxy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -31,5 +31,6 @@ def get_db():
     if db is None:
         db = g._database = db_session()
     return db
+
 
 db = LocalProxy(get_db)

@@ -1,23 +1,41 @@
-from enum import EnumInt
+from enum import IntEnum
 
 from flask import jsonify
+from werkzeug.exceptions import HTTPException
 
 
-class Error(EnumInt):
+class Code(IntEnum):
+    OK = 0
     UNAHTHORIZED = 10000
-    UNKNOW = 50000
+    INVALID_INPUT = 20000
+    NOT_FOUND = 30000
+    HTTP_ERROR = 40000
+    SERVER_ERROR = 50000 # 服务器内部错误
+    UNKNOW = 99999 # 未知错误
 
 
 class AppException(Exception):
 
-    def __init(self, code, msg):
-        pass
+    msg = '服务器繁忙，请稍后再试~'
 
-    def __repr__(self):
-        pass
+    def __init__(self, code, msg):
+        self.code = code
+        self.msg = msg
+
+    def __str__(self):
+        return self.msg
 
 
-def register_error_handler(app):
-    @app.errorhandler(Exception)
-    def handle_unexpected_error(e):
-        return jsonify(dict(code=Error.UNKNOW, msg='服务器繁忙，请稍后再试~'))
+def handle_unexpected_error(e):
+    if isinstance(e, HTTPException):
+        code = Code.HTTP_ERROR.value
+        msg = str(e)
+    elif isinstance(e, AppException):
+        code = e.code
+        msg = e.msg
+    else:
+        code = Code.UNKNOW.value
+        msg = '未知错误，请稍后再试~'
+        # 记录日志
+
+    return jsonify(dict(code=code, msg=msg))

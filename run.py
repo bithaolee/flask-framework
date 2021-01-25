@@ -1,23 +1,29 @@
+import yaml
 from flask import Flask, g
 
-from .app.core.error import register_error_handler
-from .app.handler import blueprints
-
+from app.core.error import handle_unexpected_error
+from app.handler import blueprints
 
 def create_app():
     app = Flask(__name__)
+
+    with open('config.yml') as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+    app.config.from_mapping(config)
+
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
-    register_error_handler(app)
 
-app = create_app()
+    @app.teardown_appcontext
+    def teardown_db():
+        db = g.pop('_database', None)
+        if db is not None:
+            db.close()
 
-@app.teardown_appcontext
-def teardown_db(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
+    app.register_error_handler(Exception, handle_unexpected_error)
 
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True, host='localhost', port=8000)
