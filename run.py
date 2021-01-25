@@ -1,7 +1,7 @@
 import yaml
 from flask import Flask, g
 
-from app.core.error import handle_unexpected_error
+from app.core.error import handle_error
 from app.handler import blueprints
 
 def create_app():
@@ -20,7 +20,7 @@ def create_app():
         if db is not None:
             db.close()
 
-    app.register_error_handler(Exception, handle_unexpected_error)
+    app.register_error_handler(Exception, handle_error)
 
     return app
 

@@ -26,7 +26,7 @@ class AppException(Exception):
         return self.msg
 
 
-def handle_unexpected_error(e):
+def handle_error(e):
     if isinstance(e, HTTPException):
         code = Code.HTTP_ERROR.value
         msg = str(e)
