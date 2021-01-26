@@ -2,8 +2,12 @@ APP_NAME: flask-framework
 SECRET_KEY: saljlhdjsljOjoljLIjfaweflJfOJFFJLssdfl1283ljqkl2ej2q
 DEBUG: true
 
-DB_HOST: localhost
+DB_HOST: 127.0.0.1
 DB_PORT: 3306
 DB_USER: root
 DB_PASSWORD: password
 DB_DATABASE: test
+
+REDIS_HOST: 127.0.0.1
+REDIS_PORT: 6379
+REDIS_DB: 0

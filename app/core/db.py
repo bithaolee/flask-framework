@@ -32,5 +32,9 @@ def get_db():
         db = g._database = db_session()
     return db
 
+def close_db():
+    db = g.pop('_database', None)
+    if db is not None:
+        db.close()
 
 db = LocalProxy(get_db)
