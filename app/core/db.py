@@ -1,16 +1,15 @@
-from flask import current_app, g
+from flask import g
 from werkzeug.local import LocalProxy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-host = current_app.config.get('DB_HOST')
-port = current_app.config.get('DB_PORT')
-user = current_app.config.get('DB_USER')
-password = current_app.config.get('DB_PASSWORD')
-database = current_app.config.get('DB_DATABASE')
+from .config import config
+
+
+db_cfg = config('db')
 
 engine = create_engine(
-    f'mysql+pymysql:///{user}:{password}@{host}:{port}/{database}',
+    f'mysql+pymysql:///{db_cfg["user"]}:{db_cfg["password"]}@{db_cfg["host"]}:{db_cfg["port"]}/{db_cfg["database"]}',
     convert_unicode=True,
     max_overflow=0,  # 超过连接池大小外最多创建的连接
     pool_size=5,  # 连接池大小
@@ -31,10 +30,5 @@ def get_db():
     if db is None:
         db = g._database = db_session()
     return db
-
-def close_db():
-    db = g.pop('_database', None)
-    if db is not None:
-        db.close()
 
 db = LocalProxy(get_db)

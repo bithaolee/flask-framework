@@ -18,24 +18,29 @@ class AppException(Exception):
 
     msg = '服务器繁忙，请稍后再试~'
 
-    def __init__(self, code, msg):
+    data = None
+
+    def __init__(self, code, msg, data=None):
         self.code = code
         self.msg = msg
+        self.data = data
 
     def __str__(self):
         return self.msg
 
 
 def handle_error(e):
+    data = []
     if isinstance(e, HTTPException):
         code = Code.HTTP_ERROR.value
         msg = str(e)
     elif isinstance(e, AppException):
         code = e.code
         msg = e.msg
+        data = e.data if e.data else []
     else:
         code = Code.UNKNOW.value
         msg = '未知错误，请稍后再试~'
         # 记录日志
 
-    return jsonify(dict(code=code, msg=msg))
+    return jsonify(dict(code=code, msg=msg, data=data))

@@ -2,11 +2,12 @@ import redis as _redis
 from flask import current_app
 from werkzeug.local import LocalProxy
 
-host = current_app.config.get('REDIS_HOST')
-port = current_app.config.get('REDIS_PORT')
-db = current_app.config.get('REDIS_DB')
+from .config import config
 
-pool = _redis.ConnectionPool(host=host, port=port, db=db, decode_responses=True)
+
+redis_cfg = config('redis')
+
+pool = _redis.ConnectionPool(host=redis_cfg['host'], port=redis_cfg['port'], db=redis_cfg['db'], decode_responses=True)
 
 
 def get_conn():
