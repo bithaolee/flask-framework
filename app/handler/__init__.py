@@ -1,13 +1,7 @@
-from flask import Blueprint
+from . import user
 
-user_blueprint = Blueprint(
-    'user',
-    __name__,
-    url_prefix='/user'
-)
 
 blueprints = [
-    user_blueprint
+    user.user_blueprint,
 ]
 
-from . import user

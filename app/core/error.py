@@ -42,5 +42,7 @@ def handle_error(e):
         code = Code.UNKNOW.value
         msg = '未知错误，请稍后再试~'
         # 记录日志
+        print(e)
+        raise e
 
     return jsonify(dict(code=code, msg=msg, data=data))

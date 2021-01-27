@@ -9,8 +9,7 @@ from .config import config
 db_cfg = config('db')
 
 engine = create_engine(
-    f'mysql+pymysql:///{db_cfg["user"]}:{db_cfg["password"]}@{db_cfg["host"]}:{db_cfg["port"]}/{db_cfg["database"]}',
-    convert_unicode=True,
+    f'mysql+pymysql://{db_cfg["username"]}:{db_cfg["password"]}@{db_cfg["host"]}:{db_cfg["port"]}/{db_cfg["database"]}',
     max_overflow=0,  # 超过连接池大小外最多创建的连接
     pool_size=5,  # 连接池大小
     pool_timeout=30,  # 池中没有线程最多等待的时间，否则报错
