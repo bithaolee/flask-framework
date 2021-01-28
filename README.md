@@ -21,7 +21,7 @@ pip install -r requirement.txt
 [program:flask]
 ; environment=PYTHONPATH=/data/www ;
 directory = /path/to/web ; 程序的启动目录
-command = /root/anaconda3/envs/flask/bin/gunicorn -c /data/www/flask/gunicorn.py "run:create_app('config.yml')"  ; 启动命令
+command = /root/anaconda3/envs/flask/bin/gunicorn -c /data/www/flask/gunicorn.py "run:create_app()"  ; 启动命令
 autostart = true     ; 在 supervisord 启动的时候也自动启动
 startsecs = 5        ; 启动 5 秒后没有异常退出，就当作已经正常启动了
 autorestart = true   ; 程序异常退出后自动重启

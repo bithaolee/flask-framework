@@ -1,8 +1,8 @@
 from ..core.celery import create_celery
-from ..core.app import create_app
+from .. import create_app
 
 
-app = create_app('config.yml')
+app = create_app()
 
 celery = create_celery(app)
 

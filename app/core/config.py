@@ -3,10 +3,10 @@ import yaml
 
 _config = None
 
-def load_config(file_path='config.yml'):
+def load_config():
     global _config
     if _config is None:
-        with open(file_path) as f:
+        with open('config.yml') as f:
             _config = yaml.load(f, Loader=yaml.FullLoader)
 
     return _config
@@ -21,7 +21,7 @@ def config(name=None):
 
     '''
     if _config is None:
-        raise Exception('config file not loaded')
+        load_config()
 
     if name is None:
         return _config
