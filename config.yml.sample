@@ -1,19 +1,22 @@
 app_name: flask-framework
-secrete_key: saljlhdjsljOjoljLIjfaweflJfOJFFJLssdfl1283ljqkl2ej2q
+secret_key: saljlhdjsljOjoljLIjfaweflJfOJFFJLssdfl1283ljqkl2ej2q
 debug: true
-
+timezone: Asia/Shanghai
+log:
+  level: 10 # 10: DEBUG; 20: INFO; 30: WARNING; 40: ERROR; 50: CRITICAL
+  path: ./log
+  stdout: true
 db:
-  host: 127.0.0.1
+  host: 172.12.0.12
   port: 3306
-  user: root
-  password: password
+  username: dev_qk
+  password: Qukuai2018#
   database: test
-
+  echo: false
 redis: 
-  host: 127.0.0.1
+  host: 172.12.0.12
   port: 6379
   db: 0
-
 celery:
-  backend: redis://127.0.0.1:6379
-  broker: redis://127.0.0.1:6379
+  backend: redis://172.12.0.12:6379/1
+  broker: redis://172.12.0.12:6379/1

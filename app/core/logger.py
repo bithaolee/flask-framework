@@ -2,10 +2,10 @@ import os
 import sys
 import logging
 
-from setting import load_config
+from .core.config import config
 
 
-cfg = load_config()['log']
+cfg = config('log')
 
 loggers = {}
 
