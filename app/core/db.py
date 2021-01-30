@@ -1,3 +1,5 @@
+from functools import wraps
+
 from flask import g
 from werkzeug.local import LocalProxy
 from sqlalchemy import create_engine
@@ -31,4 +33,43 @@ def get_db():
         db = g._database = db_session()
     return db
 
+
 db = LocalProxy(get_db)
+
+
+def transaction(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        # 用于测试，设置为False，不入库
+        persist = kwargs.pop('persist', True)
+        try:
+            result = fn(*args, **kwargs)
+        except Exception as e:
+            db.rollback()
+            raise e
+        else:
+            if persist:
+                db.commit()
+                return result
+            else:
+                db.rollback()
+    return wrapper
+
+
+def class_transaction(fn):
+    @wraps(fn)
+    def wrapper(self, *args, **kwargs):
+        # 用于测试，设置为False，不入库
+        persist = kwargs.pop('persist', True)
+        try:
+            result = fn(self, *args, **kwargs)
+        except Exception as e:
+            db.rollback()
+            raise e
+        else:
+            if persist:
+                db.commit()
+                return result
+            else:
+                db.rollback()
+    return wrapper

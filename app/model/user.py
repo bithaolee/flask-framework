@@ -1,12 +1,5 @@
-from sqlalchemy import Column, String, Integer
-
-from .base import BaseMixin
 
 
-class User(BaseMixin):
+class UserMgr:
 
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True)
-    username = Column(String(50), nullable=False)
-    password = Column(String(128), nullable=False)
+    pass
