@@ -1,5 +1,6 @@
+from .base import BaseMgr
 
 
-class UserMgr:
+class UserMgr(BaseMgr):
 
     pass

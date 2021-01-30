@@ -19,6 +19,7 @@ class BaseMixin(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.now)
     updated_at = Column(DateTime, nullable=False, default=datetime.datetime.now, 
                         onupdate=datetime.datetime.now, index=True)
+    deleted_at = Column(DateTime, nullable=True, default=None)
 
     def to_dict(self, only=None):
         ret_dict = {}
