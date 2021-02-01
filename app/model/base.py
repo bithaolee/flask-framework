@@ -33,6 +33,10 @@ class BaseMgr:
             'items': []
         }
         query = db.query(cls_).filter(*filters)
+        
+        if hasattr(cls_, 'deleted_at'):
+            query = query.filter(cls_.deleted_at==0)
+
         res['page']['count'] = query.count()
         res['page']['total_page'] = math.ceil(res['page']['count'] / per_page)
 
@@ -50,21 +54,49 @@ class BaseMgr:
         return res
 
 
-    def get_first(self, cls:BaseMixin, filters:set, orders:Orders=list(), field: tuple=())->dict:
+    def get_first(self, cls_:BaseMixin, filters:set, orders:Orders=list(), field: tuple=())->dict:
+        query = db.query(cls_).filter(*filters)
+
+        if hasattr(cls_, 'deleted_at'):
+            query = query.filter(cls_.deleted_at==0)
+
+        for order in orders:
+            field, sort = order
+            sort = 'desc' if sort not in ['asc', 'desc'] else sort
+            query = query.order_by(text(f'{field} {sort}'))
+
+        item = query.first()
+        return item.to_dict() if item is not None else {}
+
+
+    def add(self, cls_:BaseMixin, data:dict)->int:
+        item = cls_(**data)
+        db.add(item)
+        db.flush()
+        return item.id
+
+
+    def update(self, cls_:BaseMixin, data:dict, filters:set)->bool:
         pass
 
 
-    def add(self, cls:BaseMixin, data:dict)->int:
-        pass
+    def delete(self, cls_:BaseMixin, filters:set)->int:
+        query = db.query(cls_).filter(*filters)
+
+        if hasattr(cls_, 'deleted_at'):
+            query = query.filter(cls_.deleted_at==0)
+
+        id = 0
+        item = query.first()
+        if item is not None:
+            id = 1
+            if hasattr(item, 'delete'):
+                item.delete()
+            else:
+                db.delete(item)
+        db.commit()
+        return id
 
 
-    def update(self, cls:BaseMixin, data:dict, filters:set)->bool:
-        pass
-
-
-    def delete(self, cls:BaseMixin, filters:set)->int:
-        pass
-
-
-    def count(self, cls:BaseMixin, filters:set, filed=None)->int:
+    def count(self, cls_:BaseMixin, filters:set, filed=None)->int:
         pass

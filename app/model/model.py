@@ -1,5 +1,6 @@
-import decimal
+import time
 import datetime
+import decimal
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
@@ -11,6 +12,15 @@ from sqlalchemy import (
 Base = declarative_base()
 
 
+class SoftDeleteMixin:
+    '''软删除，需要执行软删除的表继承此类'''
+
+    deleted_at = Column(Integer, nullable=True, default=0)
+
+    def delete(self):
+        self.deleted_at = int(time.time())
+
+
 class BaseMixin(Base):
 
     __abstract__ = True
@@ -19,9 +29,11 @@ class BaseMixin(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.now)
     updated_at = Column(DateTime, nullable=False, default=datetime.datetime.now, 
                         onupdate=datetime.datetime.now, index=True)
-    deleted_at = Column(DateTime, nullable=True, default=None)
 
     def to_dict(self, only=None):
+        '''将数据对象转换为dict格式
+        :param None or set only 保留的字段
+        '''
         ret_dict = {}
         for item in self.__table__.columns:
             key = item.name
