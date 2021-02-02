@@ -5,7 +5,7 @@ from flask import Blueprint, request, jsonify
 from wtforms import Form, StringField, validators
 
 from ..core.error import Code, AppException
-from ..service.user import UserService
+# from ..service.user import UserService
 
 
 user_blueprint = Blueprint(
@@ -29,12 +29,12 @@ def register():
     if not form.validate():
         raise AppException(code=Code.INVALID_INPUT, msg='Invalid input', data=form.errors)
     
-    user_service = UserService()
-    user = user_service.get_user_by_username(form.data['username'])
-    if user:
-        raise AppException(code=Code.INVALID_INPUT, msg='User has been existed', data=[])
+    # user_service = UserService()
+    # user = user_service.get_user_by_username(form.data['username'])
+    # if user:
+    #     raise AppException(code=Code.INVALID_INPUT, msg='User has been existed', data=[])
 
-    user_service.add_user(form.data['username'], form.data['password'])
+    # user_service.add_user(form.data['username'], form.data['password'])
 
     return jsonify(dict(code=Code.OK, msg='ok'))
 
@@ -44,13 +44,13 @@ def login():
     if not form.validate():
         raise AppException(code=Code.INVALID_INPUT, msg='Invalid input', data=form.errors)
     
-    user_service = UserService()
+    # user_service = UserService()
 
-    user = user_service.get_user_by_username(form.data['username'])
-    if not user:
-        raise AppException(code=Code.INVALID_INPUT, msg='User not found', data=[])
+    # user = user_service.get_user_by_username(form.data['username'])
+    # if not user:
+    #     raise AppException(code=Code.INVALID_INPUT, msg='User not found', data=[])
 
     token = uuid.uuid4()
-    user_service.save_token(token, user)
+    # user_service.save_token(token, user)
 
     return jsonify(dict(code=Code.OK, msg='ok', data=dict(token=token)))
