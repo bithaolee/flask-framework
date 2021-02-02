@@ -11,7 +11,7 @@ from ..core.db import db
 Orders = List[Set(str, Union(str, int, decimal.Decimal))]
 
 
-class BaseManager:
+class BaseDBMgr:
 
     def get_page(self, cls_:BaseMixin, filters:set, orders:Orders=list(), field:tuple=(), page:int=1, per_page:int=10)->dict:
         '''获取分页数据

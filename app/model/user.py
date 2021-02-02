@@ -1,6 +1,6 @@
-from .base import BaseManager
+from .base import BaseDBMgr
 
 
-class UserMgr(BaseManager):
+class UserDBMgr(BaseDBMgr):
 
     pass
